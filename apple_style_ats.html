@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS - Applicant Tracking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        /* 헤더 */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e1e4e8;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-item {
+            font-size: 14px;
+            font-weight: 500;
+            color: #586069;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #0366d6;
+            background: #f1f8ff;
+        }
+
+        .nav-item.active {
+            color: #0366d6;
+            background: #f1f8ff;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* 버튼 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #28a745;
+            color: white;
+            border: 1px solid #28a745;
+        }
+
+        .btn-primary:hover {
+            background: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #586069;
+            border: 1px solid #d1d5da;
+        }
+
+        .btn-secondary:hover {
+            background: #f6f8fa;
+            border-color: #c1c7cd;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #0366d6;
+            border: 1px solid #0366d6;
+        }
+
+        .btn-outline:hover {
+            background: #0366d6;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #d73a49;
+            color: white;
+            border: 1px solid #d73a49;
+        }
+
+        .btn-danger:hover {
+            background: #cb2431;
+            border-color: #b61827;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        /* 메인 컨테이너 */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* 페이지 헤더 */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #586069;
+        }
+
+        /* 대시보드 메트릭 */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 48px;
+            font-weight: 600;
+            color: #0366d6;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #586069;
+            font-weight: 500;
+        }
+
+        /* 상태 필터 */
+        .status-filters {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px 20px;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #856404;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            background: #fd7e14;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .filter-tag .remove-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        /* 검색 및 컨트롤 */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 320px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0366d6;
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #586069;
+            font-size: 14px;
+        }
+
+        .control-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .results-count {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        /* 테이블 */
+        .table-container {
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: #f6f8fa;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #586069;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .table td {
+            padding: 16px;
+            border-bottom: 1px solid #f6f8fa;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .table tr:hover {
+            background: #f6f8fa;
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* 지원자 정보 */
+        .candidate-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .candidate-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #0366d6;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .candidate-name:hover {
+            text-decoration: underline;
+        }
+
+        .candidate-title {
+            font-size: 12px;
+            color: #586069;
+        }
+
+        .candidate-email {
+            font-size: 12px;
+            color: #586069;
+        }
+
+        /* 상태 배지 */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-applied {
+            background: #e1f5fe;
+            color: #0277bd;
+        }
+
+        .status-reviewing {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-interview {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status-rejected {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .status-hired {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        /* 액션 버튼들 */
+        .action-buttons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        /* 필터 탭 */
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: none;
+            background: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #586069;
+            border-right: 1px solid #e1e4e8;
+        }
+
+        .filter-tab:last-child {
+            border-right: none;
+        }
+
+        .filter-tab.active {
+            background: #f6f8fa;
+            color: #0366d6;
+        }
+
+        .filter-tab:hover:not(.active) {
+            background: #f8f9fa;
+        }
+
+        /* 업로드 영역 */
+        .upload-zone {
+            background: white;
+            border: 2px dashed #d1d5da;
+            border-radius: 6px;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 24px 0;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: #0366d6;
+            background: #f1f8ff;
+        }
+
+        .upload-zone.dragover {
+            border-color: #0366d6;
+            background: #f1f8ff;
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 14px;
+            color: #586069;
+            margin-bottom: 24px;
+        }
+
+        #fileInput,
+        #modalFileInput {
+            display: none;
+        }
+
+        /* 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 6px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #586069;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: #f6f8fa;
+        }
+
+        /* 폼 스타일 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5da;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #0366d6;
+            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* 빈 상태 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #586069;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .empty-subtitle {
+            font-size: 14px;
+            color: #586069;
+        }
+
+        /* 사이드바 필터 */
+        .sidebar-filters {
+            display: none;
+            width: 280px;
+            background: white;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px;
+            margin-right: 24px;
+        }
+
+        .filter-section {
+            margin-bottom: 24px;
+        }
+
+        .filter-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-item input {
+            margin: 0;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
+            color: #586069;
+            cursor: pointer;
+        }
+
+        /* 반응형 */
+        @media (max-width: 1024px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .search-container {
+                width: 100%;
+            }
+
+            .control-actions {
+                justify-content: space-between;
+            }
+
+            .nav {
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 16px;
+            }
+
+            .metrics-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .table th,
+            .table td {
+                padding: 8px 12px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .header-actions {
+                gap: 8px;
+            }
+
+            .header-actions .btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span>🏢</span>
+                <span>Greenhouse Recruiting</span>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-item" data-view="jobs">Jobs</a>
+                <a href="#" class="nav-item active" data-view="candidates">Candidates</a>
+                <a href="#" class="nav-item" data-view="reports">Reports</a>
+                <a href="#" class="nav-item" data-view="integrations">Integrations</a>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showUploadModal()">Add</button>
+                <button class="btn btn-primary" onclick="showAddModal()">Add Candidate</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 컨테이너 -->
+    <main class="main-container">
+        <!-- 대시보드 뷰 -->
+        <div id="dashboardView" class="view" style="display: none;">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Overview of your recruitment pipeline</p>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-item">
+                    <div class="metric-value" id="dashTotalCandidates">0</div>
+                    <div class="metric-label">Total Candidates</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" id="dashActiveJobs">0</div>
+                    <div class="metric-label">Active Jobs</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" id="dashInterviewsScheduled">0</div>
+                    <div class="metric-label">Interviews Scheduled</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-value" id="dashHiredThisMonth">0</div>
+                    <div class="metric-label">Hired This Month</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 지원자 목록 뷰 -->
+        <div id="candidatesView" class="view">
+            <div class="page-header">
+                <h1 class="page-title">All Candidates</h1>
+            </div>
+
+            <!-- 활성 필터 표시 -->
+            <div class="status-filters" id="activeFilters" style="display: none;">
+                <span class="filter-label">Showing</span>
+                <span class="results-count" id="filterResultsCount">0 candidate applications</span>
+                <div id="activeFilterTags"></div>
+            </div>
+
+            <!-- 검색 및 컨트롤 -->
+            <div class="controls">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search candidates" id="searchInput">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="control-actions">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-status="all">All</button>
+                        <button class="filter-tab" data-status="applied">Applied</button>
+                        <button class="filter-tab" data-status="reviewing">Reviewing</button>
+                        <button class="filter-tab" data-status="interview">Interview</button>
+                        <button class="filter-tab" data-status="rejected">Rejected</button>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="showUploadModal()">Generate Report</button>
+                    <button class="btn btn-primary btn-sm" onclick="showAddModal()">Add Candidate</button>
+                    <button class="btn btn-secondary btn-sm">Bulk Actions</button>
+                </div>
+            </div>
+
+            <!-- 지원자 테이블 -->
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Job/Status</th>
+                            <th>Stage</th>
+                            <th>Applied Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidateTable">
+                        <!-- 동적으로 생성 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 업로드 뷰 -->
+        <div id="uploadView" class="view" style="display: none;">
+            <div class="page-header">
+                <h1 class="page-title">Import Candidates</h1>
+                <p class="page-subtitle">Upload resume files or CSV data to import candidates</p>
+            </div>
+
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-title">Drop files here to upload</div>
+                <div class="upload-subtitle">Support CSV, Excel, and PDF files</div>
+                <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    Choose Files
+                </button>
+                <input type="file" id="fileInput" accept=".csv,.xlsx,.xls,.pdf" multiple>
+            </div>
+        </div>
+    </main>
+
+    <!-- 지원자 상세 모달 -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Candidate Details</h3>
+                <button class="close-btn" onclick="closeModal('viewModal')">&times;</button>
+            </div>
+            <div id="viewModalContent"></div>
+        </div>
+    </div>
+
+    <!-- 지원자 추가 모달 -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Candidate</h3>
+                <button class="close-btn" onclick="closeModal('addModal')">&times;</button>
+            </div>
+            <form id="addForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" name="phone">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" class="form-input" name="position" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Experience Level</label>
+                    <input type="text" class="form-input" name="experience" placeholder="e.g., 3 years">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Current Status</label>
+                    <select class="form-select" name="status">
+                        <option value="applied">Applied</option>
+                        <option value="reviewing">Reviewing</option>
+                        <option value="interview">Interview</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Candidate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 업로드 모달 -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Upload Resume Files</h3>
+                <button class="close-btn" onclick="closeModal('uploadModal')">&times;</button>
+            </div>
+            <div class="upload-zone" id="modalUploadZone">
+                <div class="upload-title">Drop files here or click to upload</div>
+                <div class="upload-subtitle">CSV, Excel, and PDF files supported</div>
+                <button class="btn btn-primary" onclick="document.getElementById('modalFileInput').click()">
+                    Choose Files
+                </button>
+                <input type="file" id="modalFileInput" accept=".csv,.xlsx,.xls,.pdf" multiple>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let candidates = JSON.parse(localStorage.getItem('ats_candidates')) || [];
+        let currentView = 'candidates';
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            showView('candidates');
+            addSampleData();
+            updateStats();
+        });
+
+        function setupEventListeners() {
+            // 네비게이션
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const view = this.dataset.view;
+                    if (view === 'candidates') {
+                        showView('candidates');
+                    } else {
+                        showView('dashboard');
+                    }
+                });
+            });
+
+            // 검색
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+            // 필터
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.addEventListener('click', handleFilter);
+            });
+
+            // 파일 업로드
+            setupFileUpload('fileInput', 'uploadZone');
+            setupFileUpload('modalFileInput', 'modalUploadZone');
+
+            // 폼 제출
+            document.getElementById('addForm').addEventListener('submit', handleAddCandidate);
+
+            // 모달 외부 클릭
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeModal(this.id);
+                    }
+                });
+            });
+        }
+
+        function setupFileUpload(inputId, zoneId) {
+            const input = document.getElementById(inputId);
+            const zone = document.getElementById(zoneId);
+
+            if (!input || !zone) return;
+
+            zone.addEventListener('click', () => input.click());
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleDrop);
+            input.addEventListener('change', handleFileSelect);
+        }
+
+        function showView(view) {
+            // 네비게이션 업데이트
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.view === view || (view === 'dashboard' && item.dataset.view !== 'candidates')) {
+                    item.classList.add('active');
+                }
+            });
+
+            // 뷰 전환
+            document.querySelectorAll('.view').forEach(viewEl => {
+                viewEl.style.display = 'none';
+            });
+
+            if (view === 'candidates') {
+                document.getElementById('candidatesView').style.display = 'block';
+                renderCandidates();
+            } else if (view === 'upload') {
+                document.getElementById('uploadView').style.display = 'block';
+            } else {
+                document.getElementById('dashboardView').style.display = 'block';
+                updateDashboard();
+            }
+
+            currentView = view;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            processFiles(files);
+        }
+
+        function processFiles(files) {
+            files.forEach(file => {
+                const fileType = file.name.split('.').pop().toLowerCase();
+                
+                if (['csv'].includes(fileType)) {
+                    parseCSV(file);
+                } else if (['xlsx', 'xls'].includes(fileType)) {
+                    alert('Excel file parsing requires additional library. Please use CSV format.');
+                } else if (fileType === 'pdf') {
+                    parsePDF(file);
+                } else {
+                    alert('Unsupported file format.');
+                }
+            });
+        }
+
+        function parseCSV(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = parseCSVContent(e.target.result);
+                    processCandidateData(data);
+                } catch (error) {
+                    alert('Error reading CSV file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function parseCSVContent(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] ? values[index].trim() : '';
+                    });
+                    data.push(row);
+                }
+            }
+            return data;
+        }
+
+        function parsePDF(file) {
+            const candidate = {
+                id: Date.now(),
+                name: file.name.replace('.pdf', ''),
+                email: 'unknown@email.com',
+                phone: 'Not provided',
+                position: 'Position not specified',
+                experience: 'Experience not specified',
+                status: 'applied',
+                appliedDate: new Date().toISOString().split('T')[0],
+                source: 'PDF Upload'
+            };
+
+            candidates.push(candidate);
+            saveData();
+            updateStats();
+            showView('candidates');
+            closeModal('uploadModal');
+        }
+
+        function processCandidateData(data) {
+            data.forEach(row => {
+                const candidate = {
+                    id: Date.now() + Math.random(),
+                    name: row['Name'] || row['이름'] || 'Unknown',
+                    email: row['Email'] || row['이메일'] || 'unknown@email.com',
+                    phone: row['Phone'] || row['전화번호'] || 'Not provided',
+                    position: row['Position'] || row['지원직책'] || 'Position not specified',
+                    experience: row['Experience'] || row['경력'] || 'Experience not specified',
+                    status: 'applied',
+                    appliedDate: new Date().toISOString().split('T')[0],
+                    source: 'CSV Upload'
+                };
+                candidates.push(candidate);
+            });
+
+            saveData();
+            updateStats();
+            showView('candidates');
+            closeModal('uploadModal');
+        }
+
+        function handleSearch(e) {
+            searchQuery = e.target.value.toLowerCase();
+            renderCandidates();
+        }
+
+        function handleFilter(e) {
+            document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.status;
+            renderCandidates();
+        }
+
+        function renderCandidates() {
+            const tbody = document.getElementById('candidateTable');
+            let filteredCandidates = candidates;
+
+            // 필터 적용
+            if (currentFilter !== 'all') {
+                filteredCandidates = filteredCandidates.filter(c => c.status === currentFilter);
+            }
+
+            // 검색 적용
+            if (searchQuery) {
+                filteredCandidates = filteredCandidates.filter(c => 
+                    c.name.toLowerCase().includes(searchQuery) ||
+                    c.email.toLowerCase().includes(searchQuery) ||
+                    c.position.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // 필터 상태 업데이트
+            updateFilterStatus(filteredCandidates.length);
+
+            if (filteredCandidates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <div class="empty-title">No candidates found</div>
+                                <div class="empty-subtitle">Try adjusting your search or filters</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filteredCandidates.map(candidate => `
+                <tr>
+                    <td>
+                        <div class="candidate-info">
+                            <a href="#" class="candidate-name" onclick="viewCandidate(${candidate.id})">${candidate.name}</a>
+                            <div class="candidate-title">${candidate.position}</div>
+                            <div class="candidate-email">${candidate.email}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>${candidate.position}</div>
+                        <span class="status-badge status-${candidate.status}">
+                            ${getStatusText(candidate.status)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge status-${candidate.status}">
+                            ${getStageText(candidate.status)}
+                        </span>
+                    </td>
+                    <td>${formatDate(candidate.appliedDate)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-outline btn-sm" onclick="viewCandidate(${candidate.id})">View</button>
+                            <button class="btn btn-secondary btn-sm" onclick="updateStatus(${candidate.id}, 'interview')">Interview</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCandidate(${candidate.id})">Reject</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateFilterStatus(count) {
+            const activeFilters = document.getElementById('activeFilters');
+            const resultsCount = document.getElementById('filterResultsCount');
+            const filterTags = document.getElementById('activeFilterTags');
+
+            if (currentFilter !== 'all' || searchQuery) {
+                activeFilters.style.display = 'flex';
+                resultsCount.textContent = `${count} candidate application${count !== 1 ? 's' : ''}`;
+                
+                let tags = [];
+                if (currentFilter !== 'all') {
+                    tags.push(`
+                        <span class="filter-tag">
+                            ${getStatusText(currentFilter)}
+                            <button class="remove-btn" onclick="removeFilter('status')">&times;</button>
+                        </span>
+                    `);
+                }
+                if (searchQuery) {
+                    tags.push(`
+                        <span class="filter-tag">
+                            Search: "${searchQuery}"
+                            <button class="remove-btn" onclick="removeFilter('search')">&times;</button>
+                        </span>
+                    `);
+                }
+                filterTags.innerHTML = tags.join('');
+            } else {
+                activeFilters.style.display = 'none';
+            }
+        }
+
+        function removeFilter(type) {
+            if (type === 'status') {
+                currentFilter = 'all';
+                document.querySelector('.filter-tab[data-status="all"]').classList.add('active');
+                document.querySelectorAll('.filter-tab').forEach(tab => {
+                    if (tab.dataset.status !== 'all') tab.classList.remove('active');
+                });
+            } else if (type === 'search') {
+                searchQuery = '';
+                document.getElementById('searchInput').value = '';
+            }
+            renderCandidates();
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'applied': 'Applied',
+                'reviewing': 'Reviewing',
+                'interview': 'Interview',
+                'rejected': 'Rejected',
+                'hired': 'Hired'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStageText(status) {
+            const stageMap = {
+                'applied': 'Application Review',
+                'reviewing': 'Phone Screen',
+                'interview': 'On-site Interview',
+                'rejected': 'Rejected',
+                'hired': 'Hired'
+            };
+            return stageMap[status] || status;
+        }
+
+        function updateStatus(id, status) {
+            const candidate = candidates.find(c => c.id === id);
+            if (candidate) {
+                candidate.status = status;
+                saveData();
+                renderCandidates();
+                updateStats();
+            }
+        }
+
+        function deleteCandidate(id) {
+            if (confirm('Are you sure you want to reject this candidate?')) {
+                const candidate = candidates.find(c => c.id === id);
+                if (candidate) {
+                    candidate.status = 'rejected';
+                    saveData();
+                    renderCandidates();
+                    updateStats();
+                }
+            }
+        }
+
+        function viewCandidate(id) {
+            const candidate = candidates.find(c => c.id === id);
+            if (!candidate) return;
+
+            const modal = document.getElementById('viewModal');
+            const content = document.getElementById('viewModalContent');
+
+            content.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" value="${candidate.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" value="${candidate.email}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" value="${candidate.phone}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" class="form-input" value="${candidate.position}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Experience Level</label>
+                    <input type="text" class="form-input" value="${candidate.experience}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Current Status</label>
+                    <select class="form-select" onchange="updateCandidateStatus(${candidate.id}, this.value)">
+                        <option value="applied" ${candidate.status === 'applied' ? 'selected' : ''}>Applied</option>
+                        <option value="reviewing" ${candidate.status === 'reviewing' ? 'selected' : ''}>Reviewing</option>
+                        <option value="interview" ${candidate.status === 'interview' ? 'selected' : ''}>Interview</option>
+                        <option value="rejected" ${candidate.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                        <option value="hired" ${candidate.status === 'hired' ? 'selected' : ''}>Hired</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Applied Date</label>
+                    <input type="date" class="form-input" value="${candidate.appliedDate}" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Source</label>
+                    <input type="text" class="form-input" value="${candidate.source || 'Manual Entry'}" readonly>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-danger" onclick="permanentDeleteCandidate(${candidate.id}); closeModal('viewModal');">Delete Permanently</button>
+                    <button class="btn btn-primary" onclick="closeModal('viewModal')">Close</button>
+                </div>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function updateCandidateStatus(id, status) {
+            updateStatus(id, status);
+        }
+
+        function permanentDeleteCandidate(id) {
+            if (confirm('Are you sure you want to permanently delete this candidate? This action cannot be undone.')) {
+                candidates = candidates.filter(c => c.id !== id);
+                saveData();
+                renderCandidates();
+                updateStats();
+            }
+        }
+
+        function showAddModal() {
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        function showUploadModal() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function handleAddCandidate(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const candidate = {
+                id: Date.now(),
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone') || 'Not provided',
+                position: formData.get('position'),
+                experience: formData.get('experience') || 'Not specified',
+                status: formData.get('status'),
+                appliedDate: new Date().toISOString().split('T')[0],
+                source: 'Manual Entry'
+            };
+
+            candidates.push(candidate);
+            saveData();
+            renderCandidates();
+            updateStats();
+            closeModal('addModal');
+            e.target.reset();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function updateDashboard() {
+            const total = candidates.length;
+            const activeJobs = new Set(candidates.map(c => c.position)).size;
+            const interviews = candidates.filter(c => c.status === 'interview').length;
+            const hired = candidates.filter(c => c.status === 'hired').length;
+
+            document.getElementById('dashTotalCandidates').textContent = total;
+            document.getElementById('dashActiveJobs').textContent = activeJobs;
+            document.getElementById('dashInterviewsScheduled').textContent = interviews;
+            document.getElementById('dashHiredThisMonth').textContent = hired;
+        }
+
+        function updateStats() {
+            if (currentView === 'dashboard') {
+                updateDashboard();
+            }
+            if (currentView === 'candidates') {
+                renderCandidates();
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        function saveData() {
+            localStorage.setItem('ats_candidates', JSON.stringify(candidates));
+        }
+
+        // 샘플 데이터 추가
+        function addSampleData() {
+            if (candidates.length === 0) {
+                const sampleCandidates = [
+                    {
+                        id: 1,
+                        name: 'Andre Koch',
+                        email: 'andre.koch@contractor.com',
+                        phone: '+1-555-0123',
+                        position: 'Software Engineer',
+                        experience: '5 years',
+                        status: 'interview',
+                        appliedDate: '2025-08-10',
+                        source: 'Sample Data'
+                    },
+                    {
+                        id: 2,
+                        name: 'Sarah Williams',
+                        email: 'sarah.williams@email.com',
+                        phone: '+1-555-0456',
+                        position: 'Copywriter',
+                        experience: '3 years',
+                        status: 'reviewing',
+                        appliedDate: '2025-08-12',
+                        source: 'Sample Data'
+                    },
+                    {
+                        id: 3,
+                        name: 'Michael Chen',
+                        email: 'michael.chen@email.com',
+                        phone: '+1-555-0789',
+                        position: 'Chat Specialist',
+                        experience: '2 years',
+                        status: 'applied',
+                        appliedDate: '2025-08-14',
+                        source: 'Sample Data'
+                    },
+                    {
+                        id: 4,
+                        name: 'Yvonne Alvarez',
+                        email: 'yvonne.alvarez@self-employed.com',
+                        phone: '+1-555-0321',
+                        position: 'Software Engineer',
+                        experience: '7 years',
+                        status: 'rejected',
+                        appliedDate: '2025-03-25',
+                        source: 'Sample Data'
+                    },
+                    {
+                        id: 5,
+                        name: 'Lilah Hill',
+                        email: 'lilah.hill@email.com',
+                        phone: '+1-555-0654',
+                        position: 'Software Engineer',
+                        experience: '4 years',
+                        status: 'applied',
+                        appliedDate: '2025-08-13',
+                        source: 'Sample Data'
+                    },
+                    {
+                        id: 6,
+                        name: 'David Park',
+                        email: 'david.park@email.com',
+                        phone: '+1-555-0987',
+                        position: 'Frontend Developer',
+                        experience: '6 years',
+                        status: 'interview',
+                        appliedDate: '2025-08-11',
+                        source: 'Sample Data'
+                    }
+                ];
+
+                candidates = sampleCandidates;
+                saveData();
+                updateStats();
+            }
+        }
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        closeModal(modal.id);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
