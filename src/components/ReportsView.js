@@ -9,10 +9,10 @@ const ReportsView = () => {
   const [editTitle, setEditTitle] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editCategory, setEditCategory] = useState('Basic Guide');
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchTerm] = useState(''); // 사용하지 않는 변수 주석 처리
   const [filterCategory, setFilterCategory] = useState('all');
   const [sortOrder, setSortOrder] = useState('newest');
-  const [showSearch, setShowSearch] = useState(false);
+  // const [showSearch, setShowSearch] = useState(false); // 사용하지 않는 변수 주석 처리
 
   // Sample education articles - English content
   const sampleArticles = useCallback(() => [
@@ -251,13 +251,14 @@ const ReportsView = () => {
   };
 
   const filteredArticles = articles.filter(article => {
-    const matchesSearch = searchTerm === '' || 
-                         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         article.content.toLowerCase().includes(searchTerm.toLowerCase());
+    // const matchesSearch = searchTerm === '' || 
+    //                      article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    //                      article.content.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = filterCategory === 'all' || article.category === filterCategory;
     
-    return matchesSearch && matchesCategory;
+    // return matchesSearch && matchesCategory;
+    return matchesCategory;
   });
 
   const sortedArticles = [...filteredArticles].sort((a, b) => {
@@ -404,8 +405,8 @@ const ReportsView = () => {
           <h2>Browse Community</h2>
         </div>
 
-        {/* Search Bar */}
-        {showSearch && (
+        {/* Search Bar - 현재 사용되지 않음 */}
+        {/* {showSearch && (
           <div className="search-section">
             <div className="search-container">
               <svg className="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -421,7 +422,7 @@ const ReportsView = () => {
               />
             </div>
           </div>
-        )}
+        )} */}
 
         {/* Filter and Sort Section */}
         <div className="filter-sort-section">
@@ -518,9 +519,9 @@ const ReportsView = () => {
                   </div>
                   
                   <div className="last-activity">
-                    <a href="#" className="activity-link">
+                    <button className="activity-link" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 0, font: 'inherit' }}>
                       {article.lastUser} {article.lastActivity}
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>

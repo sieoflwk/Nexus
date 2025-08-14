@@ -5,14 +5,14 @@ import './UploadView.css';
 
 const UploadView = ({ onImportCandidates, onViewChange }) => {
   const [dragActive, setDragActive] = useState(false);
-  const [file, setFile] = useState(null);
   const [fileType, setFileType] = useState('');
   const [parsedData, setParsedData] = useState([]);
-  const [headers, setHeaders] = useState([]);
-  const [mappedHeaders, setMappedHeaders] = useState({});
-  const [previewData, setPreviewData] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState('');
+  // const [headers, setHeaders] = useState([]); // 사용하지 않는 변수 주석 처리
+  // const [mappedHeaders, setMappedHeaders] = useState({}); // 사용하지 않는 변수 주석 처리
+  // const [previewData, setPreviewData] = useState([]); // 사용하지 않는 변수 주석 처리
+  // const [isProcessing, setIsProcessing] = useState(false); // 사용하지 않는 변수 주석 처리
+  // const [error, setError] = useState(''); // 사용하지 않는 변수 주석 처리
+  // const [file, setFile] = useState(null); // 사용하지 않는 변수 주석 처리
   const [step, setStep] = useState('upload'); // upload, mapping, preview, success
   const [showModal, setShowModal] = useState(false);
 
@@ -54,8 +54,8 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
 
   const handleFile = (selectedFile) => {
     console.log('handleFile called with:', selectedFile);
-    setFile(selectedFile);
-    setError('');
+    // setFile(selectedFile); // 사용하지 않는 함수 호출 주석 처리
+    // setError(''); // 사용하지 않는 함수 호출 주석 처리
     
     const fileName = selectedFile.name.toLowerCase();
     console.log('File name:', fileName);
@@ -70,7 +70,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
       processExcel(selectedFile);
     } else {
       console.log('Unsupported file type');
-      setError('Unsupported file format. Please upload a CSV or Excel file.');
+      // setError('Unsupported file format. Please upload a CSV or Excel file.'); // 사용하지 않는 함수 호출 주석 처리
     }
   };
 
@@ -83,7 +83,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
         console.log('CSV parsing complete:', results);
         if (results.errors.length > 0) {
           console.log('CSV parsing errors:', results.errors);
-          setError('Error occurred while parsing CSV file.');
+          // setError('Error occurred while parsing CSV file.'); // 사용하지 않는 함수 호출 주석 처리
           return;
         }
         handleParsedData(results.data, results.meta.fields);
@@ -107,7 +107,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
         
         if (jsonData.length < 2) {
           console.log('Excel file has insufficient data');
-          setError('Excel file has insufficient data.');
+          // setError('Excel file has insufficient data.'); // 사용하지 않는 함수 호출 주석 처리
           return;
         }
         
@@ -124,7 +124,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
         handleParsedData(dataRows, headers);
       } catch (error) {
         console.error('Excel processing error:', error);
-        setError('Error occurred while processing Excel file.');
+        // setError('Error occurred while processing Excel file.'); // 사용하지 않는 함수 호출 주석 처리
       }
     };
     reader.readAsArrayBuffer(file);
@@ -135,12 +135,12 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
     
     if (data.length === 0) {
       console.log('No data found in file');
-      setError('No data found in file.');
+      // setError('No data found in file.'); // 사용하지 않는 함수 호출 주석 처리
       return;
     }
     
     setParsedData(data);
-    setHeaders(fileHeaders);
+    // setHeaders(fileHeaders); // 사용하지 않는 함수 호출 주석 처리
     
     // Auto header mapping
     const autoMapping = {};
@@ -183,7 +183,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
     
     console.log('Enhanced auto mapping result:', autoMapping);
     
-    setMappedHeaders(autoMapping);
+    // setMappedHeaders(autoMapping); // 사용하지 않는 함수 호출 주석 처리
     
     // Auto-import functionality - directly process and import data
     const transformedData = data.map(row => {
@@ -210,7 +210,7 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
       return candidate;
     });
     
-    setPreviewData(transformedData);
+    // setPreviewData(transformedData); // 사용하지 않는 함수 호출 주석 처리
     
     // Auto-import the data
     if (onImportCandidates) {
@@ -269,13 +269,13 @@ const UploadView = ({ onImportCandidates, onViewChange }) => {
   };
 
   const resetModal = () => {
-    setFile(null);
+    // setFile(null); // 사용하지 않는 함수 호출 주석 처리
     setFileType('');
     setParsedData([]);
-    setHeaders([]);
-    setMappedHeaders({});
-    setPreviewData([]);
-    setError('');
+    // setHeaders([]); // 사용하지 않는 함수 호출 주석 처리
+    // setMappedHeaders({}); // 사용하지 않는 함수 호출 주석 처리
+    // setPreviewData([]); // 사용하지 않는 함수 호출 주석 처리
+    // setError(''); // 사용하지 않는 함수 호출 주석 처리
     setStep('upload');
     setShowModal(false);
   };

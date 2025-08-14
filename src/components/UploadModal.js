@@ -6,7 +6,7 @@ import './UploadModal.css';
 
 const UploadModal = ({ onClose, onImportCandidates }) => {
   const [dragActive, setDragActive] = useState(false);
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null); // 사용하지 않는 변수 주석 처리
   const [fileType, setFileType] = useState('');
   const [parsedData, setParsedData] = useState([]);
   const [headers, setHeaders] = useState([]);
@@ -53,8 +53,8 @@ const UploadModal = ({ onClose, onImportCandidates }) => {
   };
 
   const handleFile = (selectedFile) => {
-    setFile(selectedFile);
-    setError('');
+    // setFile(selectedFile); // 사용하지 않는 함수 호출 주석 처리
+    // setError(''); // 사용하지 않는 함수 호출 주석 처리
     
     const fileName = selectedFile.name.toLowerCase();
     if (fileName.endsWith('.csv')) {
@@ -259,13 +259,13 @@ const UploadModal = ({ onClose, onImportCandidates }) => {
   };
 
   const resetModal = () => {
-    setFile(null);
+    // setFile(null); // 사용하지 않는 함수 호출 주석 처리
     setFileType('');
     setParsedData([]);
     setHeaders([]);
     setMappedHeaders({});
     setPreviewData([]);
-    setError('');
+    // setError(''); // 사용하지 않는 함수 호출 주석 처리
     setStep('upload');
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -66,7 +66,7 @@ const DashboardView = ({ candidates, onShowAddModal, onShowUploadModal, onViewCh
     return periodCandidates;
   };
 
-  const periodCandidates = getPeriodData();
+  // const periodCandidates = getPeriodData(); // 사용하지 않는 변수 주석 처리
 
   // 최근 활동 데이터 - 실제 후보자 데이터 기반
   const generateRecentActivities = () => {
